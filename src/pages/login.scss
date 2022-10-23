@@ -1,0 +1,48 @@
+
+body.examination {
+    
+    background: 
+      url("https://www.osu.edu/assets/downloads/images/bigpics/Oval_1_1600x1200.jpg");
+    background-size:cover;
+    background-position: 0% 15%;
+
+  
+}
+.container {
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+.box {
+    margin-top:2%;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    background-color: transparentize($color: rgb(255, 255, 255), $amount: 0.15);
+    padding: 2%;
+    border-radius: 2%;    
+}
+
+.btn{
+    justify-content: center;
+    margin-top: 2%;
+    padding: 2%;
+    font-size:large;
+    font-family: monospace;
+}
+
+
+
+#outlined-basic {
+    height:min-content;
+    font-size:large;
+    font-family: monospace;
+    
+    // border: 2px solid;
+}
+
+
