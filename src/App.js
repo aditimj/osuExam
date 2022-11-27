@@ -16,6 +16,7 @@ import TermsOfUse from './pages/terms';
 import Login from './pages/login';
 import Dashboard from './pages/dashboard';
 import Register from './pages/Register';
+import TakeQuiz from './pages/TakeQuiz';
 
 
 
@@ -34,6 +35,7 @@ const [data, setData] = useState([]);
           <Route  path ='/ContactUs' element={<ContactUs />} />
           <Route  path ='/dashboard'  element={<Dashboard data={data} setData={setData} isStudent={false} />} />
           <Route  path ='/signUp'  element={<Register data={data} setData={setData} />} />
+          <Route  path ='/takeQuiz'  element={<TakeQuiz data={data} setData={setData} />} />
         </Routes>
         </div>
       </Router>

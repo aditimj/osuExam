@@ -6,12 +6,15 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const StudentInstructorDashboard = ({coursesList}) => {
+    const navigate = useNavigate();
     const onCardClick = (course) => {
         //TODO: navigate to take quiz page 
+        navigate('/takeQuiz', {state:{course:course}}); 
         console.log("course selected -- ", course);
     }
     return (
