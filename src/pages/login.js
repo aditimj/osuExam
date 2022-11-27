@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import validator from 'validator'
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography'
 import './login.scss'
 import loginApi from '../api/login';
+import { putDataInStorage } from './util';
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 
 const Login = ({data,setData}) => {
+
     let title = 'Log in';
     const {register, handleSubmit, errors} = useForm();    
     const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log("data -- ", data);
+        putDataInStorage("loginData", data);
+    },[data]);
+
+    const onSignUpClick = () => {
+        console.log("clicked signup");
+        navigate('/signUp') 
+    }
     
-    // Data object stored in data, which can be sent to the other page
+    
    async function onSubmit(data){
         console.log(data)
         let res = await loginApi.savelogin(data);
+        // get isStudent
         data.UserDetails = res;
+        putDataInStorage("loginData", data);
         if (res.Message == "Failed to login.") {
             alert(res.Message);
         } else {
@@ -67,7 +83,17 @@ const Login = ({data,setData}) => {
                         </div>
                         <input type="submit" className="btn btn-primary " />
                     </form>
-            
+                    <Box
+                        sx={{
+                            typography: 'body1',
+                            '& > :not(style) + :not(style)': {
+                            ml: 2,
+                            },
+                        }}
+                        onClick={() => {}}
+                        >
+                        <Link onClick={onSignUpClick}>Sign Up</Link>
+                        </Box>                    
                 </div>
             </div>
             </body>
@@ -78,3 +104,10 @@ const Login = ({data,setData}) => {
 }
 
 export default Login;
+
+
+/*
+
+
+
+*/

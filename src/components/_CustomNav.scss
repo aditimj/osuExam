@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+$backgroundColor: white;
+$textcolor:#000000;
+$borderLeftColor:#58b5fc;
+
+.navbar-menu {
+  height:100vh;
+  background-color:$backgroundColor;
+  box-shadow: 1px 1px 7px rgba(0,0,0,0.15);
+  transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.burger{
+  height: 35px;
+  width: 35px;
+  color: #354259;
+  margin-left: 2rem;
+}
+.close{
+  height: 35px;
+  width: 35px;
+  color: #354259;
+  color: '#354259';
+}
+
+.burger img {
+  padding: 25px 8px 0px 0px;
+  cursor: pointer;
+}
+.navbar__list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+}
+.navbar__li {
+  // padding:0px 0px 0px 12px;
+  position: relative;
+  top:2.5px;
+  font-size: 16px;
+  letter-spacing: 0px;
+  line-height: 38px;
+  color: $textcolor;
+  font-family: "Lato";
+  font-weight: 400;
+  padding-right: 20px;
+}
+.navbar__li-box:first-child {
+  margin-top:24px;
+  
+}
+.navbar__li-box {
+  // height: 43px;
+  margin-top:15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: -0.825rem;
+}
+.navbar__li-box:hover {
+  border-left: 7px solid $borderLeftColor;
+  cursor: pointer;
+}
+.user_name {
+  font: optional;
+  padding-top: 20px;
+  font-size: 20px;
+}
+.navItem_icon {
+  margin-top: 2px;
+  // font-size: 60px;
+  margin-right: 2px;
+}

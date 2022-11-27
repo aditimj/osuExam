@@ -3,27 +3,25 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import Header from './components/header';
-import Footer from './components/footer';
 import './App.scss';
 
 import { useState } from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
-  Navigate
+  Routes
 } from "react-router-dom";
 import ContactUs from './pages/ContactUs';
 import TermsOfUse from './pages/terms';
 import Login from './pages/login';
-
+import Dashboard from './pages/dashboard';
+import Register from './pages/Register';
 
 
 
 
 //app component
 function App() {
-// const [counter, setCounter] = useState(0);
 const [data, setData] = useState([]);
   return (
     <div className="App"> 
@@ -34,9 +32,10 @@ const [data, setData] = useState([]);
         <Route  path ='/' element={<Login data={data} setData={setData}/>} />
           <Route  path ='/terms' element={<TermsOfUse data={data} setData={setData}/>} />
           <Route  path ='/ContactUs' element={<ContactUs />} />
+          <Route  path ='/dashboard'  element={<Dashboard data={data} setData={setData} isStudent={false} />} />
+          <Route  path ='/signUp'  element={<Register data={data} setData={setData} />} />
         </Routes>
         </div>
-        <Footer/>
       </Router>
     </div>
   );
