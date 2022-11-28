@@ -14,61 +14,13 @@ import StudentInstructorDashboard from "./StudentInstructorDashboard";
 import DashboardHeader from "./DashboardHeader";
 import { getDataFromstorage, putDataInStorage } from "./util";
 
-const defaultStudendCourseList = [
-  {
-    course_name: "Adv DBMS",
-    id: 1
-  },
-  {
-    course_name: "Operating Systems",
-    id: 2
-  },
-  {
-    course_name: "Artificial Int",
-    id: 3
-  },
-  {
-    course_name: "English",
-    id: 4
-  },
-  {
-    course_name: "Data Mining",
-    id: 5
-  },
-  {
-    course_name: "Artificial Int",
-    id: 6
-  },
-  {
-    course_name: "Artificial Int",
-    id: 7
-  },
-  {
-    course_name: "Artificial Int",
-    id: 9 
-  }
-
-]
-const defaultInstructorCourseList = [
-  {
-    course_name: "Adv DBMS",
-    id: 1
-  },
-  {
-    course_name: "Data Mining",
-    id: 5
-  },
-  {
-    course_name: "Introduction to DBMS",
-    id: 9 
-  }
-
-]
-
-// TODO: get coursesList based on isStudent by api integration and pass it to dashboard 
-
-const Dashboard = ({ data, isStudent, coursesList = defaultStudendCourseList }) => {
+const Dashboard = ({ data, isStudent, coursesList }) => {
   const [currUserData, setCurrUserData] = useState(data);
+  if(Object.keys(data)?.length>0)
+  {
+    isStudent = data.UserDetails.loginType == 'S';
+    coursesList = data.UserDetails.courseList;
+  }
   const onDashboardClick = () => {
     console.log("onDashboardClick");
   };
@@ -77,11 +29,13 @@ const Dashboard = ({ data, isStudent, coursesList = defaultStudendCourseList }) 
   };
 
   useEffect(() => {
-    if(!data?.length) {
+    if(Object.keys(data)?.length>0) {
       console.log("btoooo");
       const storageData = getDataFromstorage("loginData");
       if(storageData) {
-        setCurrUserData(storageData);
+        setCurrUserData(JSON.parse(storageData));
+        isStudent = data.UserDetails.loginType == 'S';
+        coursesList = data.UserDetails.courseList;
       }
     }
   },[]);
@@ -157,11 +111,11 @@ const Dashboard = ({ data, isStudent, coursesList = defaultStudendCourseList }) 
       <DashboardHeader userName={currUserData?.loginId} />
       {isStudent ? (
         <>
-         <StudentInstructorDashboard coursesList={defaultStudendCourseList} />
+         <StudentInstructorDashboard coursesList={coursesList} />
         </>
       ) : (
         <>
-           <StudentInstructorDashboard coursesList={defaultInstructorCourseList} />
+           <StudentInstructorDashboard coursesList={coursesList} />
         </>
       )}
        <Footer />

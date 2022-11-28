@@ -35,7 +35,7 @@ const StudentInstructorDashboard = ({coursesList}) => {
                         <div  style={{borderTop: 2, borderTopColor: 'black', borderTopWidth: 2}}>
                             <Typography gutterBottom variant="h4" component="div" 
                        >
-                            {item.course_name}
+                            {item.courseName}
                         </Typography>
 
                         </div>

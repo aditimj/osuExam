@@ -31,6 +31,7 @@ const Login = ({data,setData}) => {
         console.log(data)
         let res = await loginApi.savelogin(data);
         // get isStudent
+        res.courseList = JSON.parse(res.courseList);
         data.UserDetails = res;
         putDataInStorage("loginData", data);
         if (res.Message == "Failed to login.") {

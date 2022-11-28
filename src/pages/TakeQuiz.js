@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
+import studentResponseApi from '../api/studentResponse';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,6 +19,7 @@ import Button from '@mui/material/Button';
 const defaultQuestionList = {
     1: [
       {
+        id:1,
         question: 'What is the full form of DBMS?',
         options: [
           'Data of Binary Management System',
@@ -28,17 +30,20 @@ const defaultQuestionList = {
         answer: 'Database Management System',
       },
       {
+        id:2,
         question:
           'In which of the following formats data is stored in the database management system?',
         options: ['Image', 'Table', 'Text', 'Graph'],
         answer: '2',
       },
       {
+        id:3,
         question: 'Which of the following is not an example of DBMS?',
         options: ['MySQL', 'Microsoft Acess', 'IBM DB2', 'Google'],
         answer: '4',
       },
       {
+        id:4,
         question: 'Which of the following is a function of the DBMS?',
         options: [
           'Storing data',
@@ -49,6 +54,7 @@ const defaultQuestionList = {
         answer: '4',
       },
       {
+        id:5,
         question: 'What does an RDBMS consist of?',
         options: [
           'Collection of Records',
@@ -61,6 +67,7 @@ const defaultQuestionList = {
     ],
     2: [
       {
+        id:6,
         question:
           'Which one of the following errors will be handle by the operating system?',
         options: [
@@ -72,6 +79,7 @@ const defaultQuestionList = {
         answer: 'all of the mentioned',
       },
       {
+        id:7,
         question: 'Where is the operating system placed in the memory?',
         options: [
           'either low or high memory (depending on the location of interrupt vector)',
@@ -82,6 +90,7 @@ const defaultQuestionList = {
         answer: 'either low or high memory (depending on the location of interrupt vector)',
       },
       {
+        id:8,
         question:
           'In Operating Systems, which of the following is/are CPU scheduling algorithms?',
         options: [
@@ -93,12 +102,14 @@ const defaultQuestionList = {
         answer: 'All of the mentioned',
       },
       {
+        id:9,
         question:
           'Which one of the following is not a real time operating system?',
         options: ['RTLinux', 'Palm OS', 'QNX', ' VxWorks'],
         answer: 'Palm OS'
       },
       {
+        id:10,
         question: 'What does OS X has?',
         options: [
           'monolithic kernel with modules',
@@ -113,17 +124,21 @@ const defaultQuestionList = {
 
 
 const DisplayQuestions = ({questions, courseName}) => {
+  const location = useLocation();
   const [selectedOption, setSelectedOption] = useState();
   const optionClicked = (val) => { 
     setSelectedOption(val);
   };
-  const onSubmitClick = (answer) => {
-    if(answer === selectedOption) {
-      // TODO: ans was correct
-    }else {
-         // TODO: ans was not correct
+  async function onSubmitClick(id){
+    let body = {seats:{"id":location.state.course.exam.rooms.seats[0].id},"answerKey":{"questionId":id},"answer":selectedOption}
+    let res = await studentResponseApi.save(body);
+    console.log(res);
+    if(res!=undefined && res.Message === 'Successfully saved')
+    {
+      let button = document.getElementById(id);
+      button.disabled = true;
+      button.parentElement.appendChild(document.createTextNode("Successfully submitted!"));
     }
-    console.log("onSubmitClick -- ", answer, selectedOption);
   }
 
   return (
@@ -153,7 +168,7 @@ const DisplayQuestions = ({questions, courseName}) => {
                     <FormControlLabel value={question.options[2]} control={<Radio />} label={question.options[2]} onClick={() => optionClicked(question.options[2])} />
                     <FormControlLabel value={question.options[3]} control={<Radio />} label={question.options[3]} onClick={() => optionClicked(question.options[3])} />
                   </RadioGroup>
-                  <Button variant="contained" onClick={() => onSubmitClick(question.answer)}>Submit</Button>
+                  <Button id={question.id} variant="contained" onClick={() => onSubmitClick(question.id)}>Submit</Button>
                 </FormControl>
                 </Typography>
                 </CardContent>
@@ -174,7 +189,7 @@ const TakeQuiz = () => {
             if(location.state.course.id == item) {
               const questions = defaultQuestionList[item];
               return (
-               <DisplayQuestions key={index} questions={questions} courseName={location.state.course.course_name} />
+               <DisplayQuestions key={index} questions={questions} courseName={location.state.course.courseName} />
               )              
             }
             return <></>;
