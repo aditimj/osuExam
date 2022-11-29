@@ -130,14 +130,18 @@ const DisplayQuestions = ({questions, courseName}) => {
     setSelectedOption(val);
   };
   async function onSubmitClick(id){
-    let body = {seats:{"id":location.state.course.exam.rooms.seats[0].id},"answerKey":{"questionId":id},"answer":selectedOption}
-    let res = await studentResponseApi.save(body);
+    let room = location.state.course.exam.rooms;
+    let body = {seats:{"id":room.seats[0].id},"answerKey":{"questionId":id},"answer":selectedOption}
+    let res = await studentResponseApi.save(body, room.id,room.seats[0].id, id);
     console.log(res);
     if(res!=undefined && res.Message === 'Successfully saved')
     {
       let button = document.getElementById(id);
       button.disabled = true;
-      button.parentElement.appendChild(document.createTextNode("Successfully submitted!"));
+      let div = document.createElement("div");
+      div.innerText = "Successfully submitted!";
+      div.style = 'margin-top:10px';
+      button.parentElement.appendChild(div);
     }
   }
 

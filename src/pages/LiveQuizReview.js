@@ -1,5 +1,7 @@
-import * as React from 'react';
+import React, { useCallback,useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
+import Loader from '../components/Loader';
+import { useLocation } from 'react-router-dom';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -7,11 +9,49 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import studentResponseApi from '../api/studentResponse';
 
 const LiveQuizReview = () => {
-
-
+  const location = useLocation();
+  const course = location.state.course;
+  const [rows, setRows] = useState([]);
+  const [isConnected, setConnected] = useState(false);
+  if(!isConnected){
+    var wb  = new WebSocket("ws://localhost:80/WebSocket")
+    debugger;
+    wb.onopen = function()
+    {
+      setConnected(true);
+      console.log("Connected");
+    }
+    wb.onmessage = function(e)
+    {
+      let obj = JSON.parse(e.data);
+      [].some.call(Object.keys(obj),function(key){
+        [].some.call(obj[key],function(row){
+          if(document.getElementById(key+"."+row.first)!=undefined)
+          {document.getElementById(key+"."+row.first).innerText = row.second;
+          document.getElementById(key+"."+row.first).style = getColor(row.second);
+          }
+          else{
+            let td = document.createElement("td");
+            let color = getColor(row.second);
+            td.setAttribute('class','MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeMedium css-1vr29kj-MuiTableCell-root');
+            td.setAttribute('id',key+"."+row.first);
+            td.setAttribute('style','color:'+color.color);
+            td.innerText = row.second;
+            if(document.getElementById("div_"+key)!=undefined){
+            document.getElementById("div_"+key).appendChild(td);
+            }
+            if(document.getElementById("div_"+key)!=undefined){
+              document.getElementById("div_"+key).appendChild(td);
+              }
+          }
+        })
+      })
+      
+    }
+}
     const getColor = (val) => {
         console.log("val -- ", val);
         if(val == 'Correct') {
@@ -54,7 +94,22 @@ const LiveQuizReview = () => {
           border: 0,
         },
       }));
+      const [loading, setLoading] = useState(false);
+      const loadStudentResponse = useCallback(async () => {
+        if (loading || Object.keys(rows).length>0) return;
+      
+        setLoading(true);
+        try {
+          const json =  await studentResponseApi.getAllStudentResponse(course.exam.id);
+          setRows(json);
+        } catch (_error) {
+        }
+        setLoading(false);
+      }, [loading, rows]);
 
+      useEffect(() => {
+        loadStudentResponse();
+      }, [rows]);
         function createData(
         SID,
         name,
@@ -67,31 +122,16 @@ const LiveQuizReview = () => {
         return { SID, name, Q1,Q2,Q3,Q4,Q5};
         }
 
-        const rows = [
-        createData( 1, 'ABC', 'Correct','Incorrect','Malpractice','Correct','Incorrect'),
-        createData( 2, 'XYZ', 'Correct','Correct','Incorrect','Correct','Malpractice'),
-        createData( 3, 'FGH', 'Incorrect','Correct','Malpractice','Correct','Correct'),
-        createData( 4, 'IJK', 'Correct','Incorrect','Malpractice','Correct','Malpractice'),
-        createData( 5, 'LMN', 'Malpractice','Incorrect','Correct','Incorrect','Malpractice'),
-        createData( 6, 'JSL', 'Incorrect','Incorrect','Correct','Incorrect','Malpractice'),
-        createData( 7, 'FSA', 'Correct','Incorrect','Correct','Incorrect','Malpractice'),
-        createData( 8, 'CDS', 'Malpractice','Incorrect','Correct','Malpractice','Malpractice'),
-        createData( 9, 'SCC', 'Correct','Incorrect','Correct','Incorrect','Malpractice'),
-        createData( 10, 'VSA', 'Malpractice','Incorrect','Correct','Incorrect','Malpractice'),
-        createData( 11, 'BFD', 'Correct','Incorrect','Malpractice','Incorrect','Correct'),
-        createData( 12, 'VSA', 'Correct','Correct','Correct','Incorrect','Malpractice'),
-        createData( 13, 'DFGR', 'Correct','Incorrect','Malpractice','Incorrect','Malpractice'),
-        createData( 14, 'RTF', 'Malpractice','Incorrect','Correct','Incorrect','Correct'),
-        createData( 15, 'GHF', 'Incorrect','Malpractice','Correct','Incorrect','Malpractice'),
-        ];
-
-    return (
+        
+        if (rows.length==0) {
+          return <Loader size={50} />;
+        }else {
+        return (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
                 <StyledTableCell>SID</StyledTableCell>
-                <StyledTableCell align="right">Name</StyledTableCell>
                 <StyledTableCell align="right">Q1</StyledTableCell>
                 <StyledTableCell align="right">Q2</StyledTableCell>
                 <StyledTableCell align="right">Q3</StyledTableCell>
@@ -100,24 +140,20 @@ const LiveQuizReview = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.SID}>
+              {Object.keys(rows).map((key) => (
+                <StyledTableRow id={"div_"+key} key={key}>
                   <StyledTableCell component="th" scope="row">
-                    {row.SID}
+                    {key}
                   </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.name}
-                </StyledTableCell>
-                  <StyledTableCell align="right"  style={getColor(row.Q1)}>{row.Q1}</StyledTableCell>
-                  <StyledTableCell align="right" style={getColor(row.Q2)}>{row.Q2}</StyledTableCell>
-                  <StyledTableCell align="right" style={getColor(row.Q3)}>{row.Q3}</StyledTableCell>
-                  <StyledTableCell align="right" style={getColor(row.Q4)}>{row.Q4}</StyledTableCell>
-                  <StyledTableCell align="right" style={getColor(row.Q5)}>{row.Q5}</StyledTableCell>
+                  {rows[key].map(row=>(
+                    <StyledTableCell id={key+"."+row.first} align="right"  style={getColor(row.second)}>{row.second}</StyledTableCell>
+                  ))}
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       );
+              }
 };
 export default LiveQuizReview;

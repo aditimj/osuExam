@@ -10,12 +10,19 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const StudentInstructorDashboard = ({coursesList}) => {
+const StudentInstructorDashboard = ({coursesList, isStudent}) => {
     const navigate = useNavigate();
     const onCardClick = (course) => {
         //TODO: navigate to take quiz page 
-        navigate('/takeQuiz', {state:{course:course}}); 
-        console.log("course selected -- ", course);
+        if(isStudent)
+        {
+            navigate('/takeQuiz', {state:{course:course}}); 
+            console.log("course selected -- ", course);
+        }
+        else{
+            navigate('/liveQuizReview', {state:{course:course}}); 
+            console.log("course selected -- ", course);
+        }
     }
     return (
         <>

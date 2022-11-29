@@ -109,16 +109,10 @@ const Dashboard = ({ data, isStudent, coursesList }) => {
         flex:1
       }}>
       <DashboardHeader userName={currUserData?.loginId} />
-      {isStudent ? (
-        <>
-         <StudentInstructorDashboard coursesList={coursesList} />
+      <>
+         <StudentInstructorDashboard coursesList={coursesList} isStudent={isStudent}/>
         </>
-      ) : (
-        <>
-           <StudentInstructorDashboard coursesList={coursesList} />
-        </>
-      )}
-       <Footer />
+      <Footer />
       </div>
    
     </div>

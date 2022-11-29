@@ -16,7 +16,10 @@ function Header({data}) {
       <Link to="/" className="logo"><img className="logo__img" alt="OSU Exam" src={Logo} /><span className="logo__country">.com</span></Link>
       <Link className="AboutUs" to='/ContactUs'><span>Contact Us</span></Link>
       <Link to="/dashboard/examinationEntry" className="h-data">
-      <Icon path={mdiAccount} size={1.4} />
+      <div style={{marginTop: 9}}>
+        <Icon path={mdiAccount} size={1.4} />
+        <p>{data.loginId}</p>
+      </div>
       </Link>
       
       </div>
